@@ -4,15 +4,12 @@ description: "Downloads the latest release asset from a GitHub repo and uploads 
 inputs:
   github_token:
     description: "GitHub token to access the repository. Defaults to GitHub Actions token."
-    required: true
     default: ${{ github.token }}
   repository:
     description: "Repository in owner/repo format. Defaults to current repository."
-    required: true
     default: ${{ github.repository }}
   asset_pattern:
     description: "Glob pattern to match the asset name (e.g., *.zip)."
-    required: true
     default: "*.zip"
   aws_access_key_id:
     description: "AWS Access Key ID."
@@ -28,7 +25,6 @@ inputs:
     required: true
   subfolder:
     description: "S3 key prefix (folder path in bucket, optional)."
-    required: false
     default: ""
 runs:
   using: "composite"
