@@ -3,14 +3,17 @@ name: "Deploy Latest Release to S3"
 description: "Downloads the latest release asset from a GitHub repo and uploads it to an S3 bucket."
 inputs:
   github_token:
-    description: "GitHub token to access the repository."
+    description: "GitHub token to access the repository. Defaults to GitHub Actions token."
     required: true
+    default: ${{ github.token }}
   repository:
-    description: "Repository in owner/repo format."
+    description: "Repository in owner/repo format. Defaults to current repository."
     required: true
+    default: ${{ github.repository }}
   asset_pattern:
     description: "Glob pattern to match the asset name (e.g., *.zip)."
     required: true
+    default: "*.zip"
   aws_access_key_id:
     description: "AWS Access Key ID."
     required: true
@@ -34,7 +37,7 @@ runs:
       id: download
       uses: robinraju/release-downloader@v1.10
       with:
-        repository: ${{ inputs.repository }}
+        repository: ${{ inputs.repository != '' && inputs.repository || github.repository }}
         tag: "latest"
         fileName: ${{ inputs.asset_pattern }}
         token: ${{ inputs.github_token }}
