@@ -8,8 +8,8 @@ inputs:
     description: "S3 bucket name"
     required: true
   subfolder:
-    description: "Path inside the bucket"
-    required: true
+    description: "Path inside the bucket, default is root (/)"
+    default: "/"
   aws-region:
     description: "AWS region"
     required: false
@@ -22,7 +22,7 @@ runs:
       uses: actions/download-artifact@v4
       with:
         name: ${{ inputs.artifact-name }}
-        path: build/
+        path: artifact/
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
@@ -33,5 +33,5 @@ runs:
 
     - name: Sync to S3
       run: |
-        aws s3 sync build/ s3://${{ inputs.bucket }}/${{ inputs.subfolder }}/ --delete
+        aws s3 sync artifact/ s3://${{ inputs.bucket }}${{ inputs.subfolder }} --delete
       shell: bash

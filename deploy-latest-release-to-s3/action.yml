@@ -1,0 +1,62 @@
+# Reusable GitHub Action: Download latest release and deploy to S3
+name: "Deploy Latest Release to S3"
+description: "Downloads the latest release asset from a GitHub repo and uploads it to an S3 bucket."
+inputs:
+  github_token:
+    description: "GitHub token to access the repository."
+    required: true
+  repository:
+    description: "Repository in owner/repo format."
+    required: true
+  asset_pattern:
+    description: "Glob pattern to match the asset name (e.g., *.zip)."
+    required: true
+  aws_access_key_id:
+    description: "AWS Access Key ID."
+    required: true
+  aws_secret_access_key:
+    description: "AWS Secret Access Key."
+    required: true
+  aws_region:
+    description: "AWS Region."
+    required: true
+  s3_bucket:
+    description: "S3 bucket name."
+    required: true
+  subfolder:
+    description: "S3 key prefix (folder path in bucket, optional)."
+    required: false
+    default: ""
+runs:
+  using: "composite"
+  steps:
+    - name: Download latest release asset
+      id: download
+      uses: robinraju/release-downloader@v1.10
+      with:
+        repository: ${{ inputs.repository }}
+        tag: "latest"
+        fileName: ${{ inputs.asset_pattern }}
+        token: ${{ inputs.github_token }}
+        out-file-path: ./release-asset
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ inputs.aws_access_key_id }}
+        aws-secret-access-key: ${{ inputs.aws_secret_access_key }}
+        aws-region: ${{ inputs.aws_region }}
+
+    - name: Unzip release asset
+      shell: bash
+      run: |
+        asset_file=$(ls ./release-asset)
+        mkdir -p ./unzipped
+        unzip -o "./release-asset/$asset_file" -d ./unzipped
+
+    - name: Upload unzipped contents to S3
+      shell: bash
+      run: |
+        dest="s3://${{ inputs.s3_bucket }}${{ inputs.subfolder && format('/{0}', inputs.subfolder) || '' }}"
+        aws s3 cp ./unzipped "$dest" --recursive
+        echo "Uploaded contents of zip to $dest"
