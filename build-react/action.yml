@@ -1,0 +1,36 @@
+name: "Build React App"
+description: "Build a React app and upload the artifact"
+inputs:
+  node-version:
+    description: "Node.js version to use"
+    required: false
+    default: "20"
+  artifact-name:
+    description: "Name of the artifact"
+    required: false
+    default: "react-build"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout source
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Install dependencies
+      run: npm ci
+      shell: bash
+
+    - name: Build React app
+      run: npm run build
+      shell: bash
+
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: build/
