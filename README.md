@@ -217,12 +217,13 @@ Verify that Django migrations are up-to-date.
 
 **Inputs**:
 
-- `python-version` → Python version to use
+- `python-version` (optional, default `3.12`) → Python version to use
 
 This action will:
 
 - Set up Python environment
-- Check for missing migrations
+- Install development and testing dependencies
+- Run `makemigrations --check --dry-run` to verify migrations
 
 ---
 
@@ -238,12 +239,15 @@ Run Python linters to ensure code quality.
 
 **Inputs**:
 
-- `python-version` → Python version to use
+- `python-version` (optional, default `3.12`) → Python version to use
 
 This action will:
 
 - Set up Python environment
-- Run linters (e.g., flake8, black)
+- Install linting dependencies (e.g., black, isort, flake8)
+- Run `black` to check code formatting
+- Run `isort` to check import order
+- Run `flake8` to check for style and syntax issues
 
 ---
 
