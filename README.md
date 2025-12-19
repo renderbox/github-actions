@@ -30,7 +30,7 @@ This action will:
 
 ---
 
-### 2. **Build React (CRA or Vite)**
+### 2. **Build React (CRA)**
 
 Builds a React app and uploads it as a GitHub Actions artifact.
 
@@ -51,11 +51,36 @@ This action will:
 - Checkout source
 - Install dependencies with `npm ci`
 - Run `npm run build`
-- Uploads the build output (`dist/` for Vite, `build/` for CRA) as an artifact
+- Uploads the build output (`build/` for CRA) as an artifact
 
 ---
 
-### 3. **Deploy to S3**
+### 3. **Build React (Vite)**
+
+Builds a Vite app and uploads it as a GitHub Actions artifact.
+
+```yaml
+- uses: renderbox/github-actions/build-react-vite@v1
+  with:
+    node-version: 20
+    artifact-name: vite-build-${{ github.sha }}
+```
+
+**Inputs**:
+
+- `node-version` (optional, default `20`)
+- `artifact-name` (optional, default `vite-build`)
+
+This action will:
+
+- Checkout source
+- Install dependencies with `npm ci`
+- Run `npm run build`
+- Uploads the build output (`build/` for Vite) as an artifact
+
+---
+
+### 4. **Deploy to S3**
 
 Download a previously uploaded build artifact and deploy it to Amazon S3.
 
@@ -82,7 +107,35 @@ Requires AWS credentials in repo secrets:
 
 ---
 
-### 4. **Create Release**
+### 5. **Deploy Latest Release to S3**
+
+Downloads the latest release asset from a GitHub repo and uploads it to an S3 bucket.
+
+```yaml
+- uses: renderbox/github-actions/deploy-latest-release-to-s3@v1
+  with:
+    repository: owner/repo
+    asset_pattern: *.zip
+    aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    aws_region: us-east-1
+    s3_bucket: my-bucket-name
+    subfolder: my/subfolder
+```
+
+**Inputs**:
+
+- `repository` → Repository in owner/repo format
+- `asset_pattern` → Glob pattern to match the asset name
+- `aws_access_key_id` → AWS Access Key ID
+- `aws_secret_access_key` → AWS Secret Access Key
+- `aws_region` → AWS Region
+- `s3_bucket` → S3 bucket name
+- `subfolder` → S3 key prefix (folder path in bucket, optional)
+
+---
+
+### 6. **Create Release**
 
 Create a GitHub Release (optionally uploading files).
 
@@ -101,6 +154,30 @@ Create a GitHub Release (optionally uploading files).
 - `release_name` (optional) → Human-readable name
 - `body` (optional) → Release notes
 - `files` (optional) → Files or directories to upload
+
+---
+
+### 7. **Publish to PyPI**
+
+Build and publish a Python package to PyPI.
+
+```yaml
+- uses: renderbox/github-actions/publish-to-pypi@v1
+  with:
+    python-version: 3.12
+```
+
+**Inputs**:
+
+- `python-version` (optional, default `3.12`) → Python version to use
+
+This action will:
+
+- Checkout source
+- Set up Python environment
+- Build distribution packages
+- Store the distribution packages as artifacts
+- Publish packages to PyPI
 
 ---
 
@@ -152,6 +229,3 @@ jobs:
           subfolder: my/subfolder
 ```
 
----
-
-👉 Do you want me to also include **examples for Vite vs CRA builds** in the docs (since their build outputs differ), or just keep it generic with a note about adjusting the output folder?

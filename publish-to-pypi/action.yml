@@ -1,0 +1,22 @@
+# .github/workflows/publish-to-pypi.yml
+name: Publish Python 🐍 Package to PyPI 📦
+
+on:
+  workflow_call:
+
+jobs:
+  publish:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write  # Required for PyPI OIDC
+    steps:
+      - name: Download built distributions
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+
+      - name: Publish distribution to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
