@@ -181,6 +181,72 @@ This action will:
 
 ---
 
+### 8. **Test Django Versions**
+
+Run tests across multiple Django versions to ensure compatibility.
+
+```yaml
+- uses: renderbox/github-actions/test-django-versions@v1
+  with:
+    python-version: 3.12
+    django-versions: "3.2,4.0,4.1"
+```
+
+**Inputs**:
+
+- `python-version` → Python version to use
+- `django-versions` → Comma-separated list of Django versions to test
+
+This action will:
+
+- Set up Python environment
+- Install dependencies for each Django version
+- Run tests for each version
+
+---
+
+### 9. **Check Django Migrations**
+
+Verify that Django migrations are up-to-date.
+
+```yaml
+- uses: renderbox/github-actions/check-django-migrations@v1
+  with:
+    python-version: 3.12
+```
+
+**Inputs**:
+
+- `python-version` → Python version to use
+
+This action will:
+
+- Set up Python environment
+- Check for missing migrations
+
+---
+
+### 10. **Lint Python**
+
+Run Python linters to ensure code quality.
+
+```yaml
+- uses: renderbox/github-actions/lint-python@v1
+  with:
+    python-version: 3.12
+```
+
+**Inputs**:
+
+- `python-version` → Python version to use
+
+This action will:
+
+- Set up Python environment
+- Run linters (e.g., flake8, black)
+
+---
+
 ## ⚡ Example Full Workflow
 
 ```yaml
