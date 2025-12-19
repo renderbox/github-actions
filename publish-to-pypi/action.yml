@@ -1,22 +1,13 @@
 # .github/workflows/publish-to-pypi.yml
 name: Publish Python 🐍 Package to PyPI 📦
+description: 'Download built artifacts and publish to PyPI using OIDC'
 
-on:
-  workflow_call:
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/download-artifact@v4
+      with:
+        name: python-package-distributions
+        path: dist/
 
-jobs:
-  publish:
-    name: Publish to PyPI
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write  # Required for PyPI OIDC
-    steps:
-      - name: Download built distributions
-        uses: actions/download-artifact@v4
-        with:
-          name: python-package-distributions
-          path: dist/
-
-      - name: Publish distribution to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+    - uses: pypa/gh-action-pypi-publish@release/v1
