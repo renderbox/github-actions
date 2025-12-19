@@ -1,0 +1,23 @@
+name: Lint Python Code
+description: Run black, isort, and flake8
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[lint]"
+      shell: bash
+
+    - run: black --check src
+      shell: bash
+
+    - run: isort --check-only src
+      shell: bash
+
+    - run: flake8 src
+      shell: bash
