@@ -251,6 +251,34 @@ This action will:
 
 ---
 
+### 11. **Bump Version**
+
+Automatically bump the version of your project and create a Git tag.
+
+```yaml
+- uses: renderbox/github-actions/bump-version@v1
+  with:
+    version-part: patch
+    python-version: 3.12
+    github-pat: ${{ secrets.GITHUB_PAT }}
+```
+
+**Inputs**:
+
+- `version-part` (optional, default `patch`) → Part of the version to bump (`patch`, `minor`, `major`)
+- `python-version` (optional, default `3.12`) → Python version to use
+- `github-pat` → GitHub Personal Access Token for pushing tags
+
+This action will:
+
+- Set up Python environment
+- Install `bump2version`
+- Configure Git user for the action
+- Bump the specified version part
+- Push the updated version and tags to the repository
+
+---
+
 ## ⚡ Example Full Workflow
 
 ```yaml

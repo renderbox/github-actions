@@ -1,0 +1,39 @@
+name: Bump Version and Create Tag
+description: Bumps the version using bump2version and pushes tag with PAT
+inputs:
+  version-part:
+    description: Part to bump (patch, minor, major)
+    required: false
+    default: patch
+
+  python-version:
+    description: Python version to use
+    required: false
+    default: '3.12'
+
+  github-pat:
+    description: GitHub Personal Access Token (for pushing tags)
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - run: pip install bump2version
+      shell: bash
+
+    - run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+      shell: bash
+
+    - run: bump2version ${{ inputs.version-part }}
+      shell: bash
+
+    - run: |
+        git remote set-url origin https://x-access-token:${{ inputs.github-pat }}@github.com/${{ github.repository }}
+        git push origin HEAD --follow-tags
+      shell: bash
