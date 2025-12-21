@@ -30,10 +30,22 @@ runs:
         git config user.email "github-actions[bot]@users.noreply.github.com"
       shell: bash
 
-    - name: Bump version and create tag
+    - name: Check last commit message
+      id: skipcheck
+      run: |
+        COMMIT_MSG=$(git log -1 --pretty=%B)
+        echo "Last commit: $COMMIT_MSG"
+        if echo "$COMMIT_MSG" | grep -q "Bump version:"; then
+          echo "SKIP_BUMP=true" >> "$GITHUB_ENV"
+        fi
+      shell: bash
+
+    - name: Bump version
+      if: env.SKIP_BUMP != 'true'
       run: bump2version ${{ inputs.version-part }}
       shell: bash
 
-    - name: Push commit and tag
+    - name: Push changes and tag
+      if: env.SKIP_BUMP != 'true'
       run: git push origin HEAD --follow-tags
       shell: bash
