@@ -157,31 +157,7 @@ Create a GitHub Release (optionally uploading files).
 
 ---
 
-### 7. **Publish to PyPI**
-
-Build and publish a Python package to PyPI.
-
-```yaml
-- uses: renderbox/github-actions/publish-to-pypi@v1
-  with:
-    python-version: 3.12
-```
-
-**Inputs**:
-
-- `python-version` (optional, default `3.12`) → Python version to use
-
-This action will:
-
-- Checkout source
-- Set up Python environment
-- Build distribution packages
-- Store the distribution packages as artifacts
-- Publish packages to PyPI
-
----
-
-### 8. **Test Django Versions**
+### 7. **Test Django Versions**
 
 Run tests across multiple Django versions to ensure compatibility.
 
@@ -205,7 +181,7 @@ This action will:
 
 ---
 
-### 9. **Check Django Migrations**
+### 8. **Check Django Migrations**
 
 Verify that Django migrations are up-to-date.
 
@@ -227,7 +203,7 @@ This action will:
 
 ---
 
-### 10. **Lint Python**
+### 9. **Lint Python**
 
 Run Python linters to ensure code quality.
 
@@ -251,7 +227,7 @@ This action will:
 
 ---
 
-### 11. **Bump Version**
+### 10. **Bump Version**
 
 Automatically bump the version of your project and create a Git tag.
 
