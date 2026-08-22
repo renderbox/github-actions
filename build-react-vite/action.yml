@@ -34,3 +34,4 @@ runs:
       with:
         name: ${{ inputs.artifact-name }}
         path: build/
+        retention-days: 7
